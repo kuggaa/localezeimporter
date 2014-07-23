@@ -1,5 +1,7 @@
 /splitted/*
 /datastore/*
+/logs/*
+/ftp/*
 log*
 localezecli.sublime*
 config.php

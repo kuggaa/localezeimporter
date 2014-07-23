@@ -2,9 +2,29 @@
 
 # Configuration stuff
 
-#echo "Localeze Data Importer"
 
-fspec=./datastore/large.xml
+#Color Codes
+red='\033[0;31m'
+NC='\033[0m' # No Color
+blue='\033[1;34m'
+####################
+echo -e "${red}LOCALEZE DATA IMPORTER"
+echo -e "==================================================="
+echo -e "${blue}Downloading Zip file from FTP"
+echo -e "---------------------------------------------------${NC}"
+
+source config.cfg
+
+curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
+
+if [[ $? -eq 0 ]];
+	then
+		unzip -o $ftp_outputfile -d $ftp_extractdir
+		extractedfile=`zipinfo -1 $ftp_outputfile`
+
+fi
+fspec="$ftp_extractdir/$extractedfile"
+
 num_lines=200000
 num_files=26
 
@@ -13,8 +33,14 @@ num_files=26
 total_lines=$(cat ${fspec} | wc -l)
 ((lines_per_file = (total_lines + num_files - 1) / num_files))
 
+echo "Removing Old Splitted files..."
+rm -rf splitted/*
+
+
 # Split the actual file, maintaining lines.
 
+echo -e "${blue}Splitting Files"
+echo -e "---------------------------------------------------${NC}"
 split -l ${lines_per_file} ${fspec} splitted/xedb_split.
 
 # Debug information
@@ -26,8 +52,10 @@ wc -l splitted/xedb_split.*
 count=0
 
 
+
 for entry in splitted/*
 do 
+echo "Imporing data from $entry"
 	if [[ $count -eq 0 ]];
 	then		
 			echo '</Business></Delivery>' >>$entry
@@ -50,7 +78,7 @@ do
 				((count++))
 
 #echo 
- php import.php $entry >log$count.txt &
+ php import.php $entry >./logs/log$count.txt &
 
 		
 done
