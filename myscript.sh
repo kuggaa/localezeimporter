@@ -2,6 +2,8 @@
 
 # Configuration stuff
 
+#echo "Localeze Data Importer"
+
 fspec=./datastore/large.xml
 num_lines=200000
 num_files=26
