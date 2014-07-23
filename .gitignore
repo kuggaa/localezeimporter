@@ -1,0 +1,6 @@
+/splitted/*
+/datastore/*
+log*
+localezecli.sublime*
+config.php
+.idea/*
