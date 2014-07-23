@@ -6,6 +6,8 @@ Steps
 ================
 * Pull zip file from ftp
 * Extract it
-* Split it to files
+* Split it into smaller files
 * run importer in each file as background process
+ 
+
 
