@@ -12,13 +12,14 @@ NC='\033[0m' # No Color
 blue='\033[1;34m'
 ####################
 echo -e "${red}LOCALEZE DATA IMPORTER"
-echo -e "==================================================="
-echo -e "${blue}Downloading Zip file from FTP"
-echo -e "---------------------------------------------------${NC}"
-
+echo -e "================================================================================${NC}"
+echo    "Importer Started on `date`"
+echo -e "Downloading Zip file from FTP"
+echo -e "--------------------------------------------------------------------------------"
 source config.cfg
-
 curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
+echo -e "--------------------------------------------------------------------------------"
+
 
 if [[ $? -eq 0 ]];
 	then
@@ -42,19 +43,15 @@ rm -rf splitted/*
 
 # Split the actual file, maintaining lines.
 
-echo -e "${blue}Splitting Files"
-echo -e "---------------------------------------------------${NC}"
+echo -e "Splitting Files..."
 split -l ${lines_per_file} ${fspec} splitted/xedb_split.
 
-# Debug information
-
 echo "Total lines     = ${total_lines}"
-echo "Lines  per file = ${lines_per_file}"    
-wc -l splitted/xedb_split.*
+echo "Lines  per file = ${lines_per_file}" 
+
+#wc -l splitted/xedb_split.*
 
 count=0
-
-
 
 for entry in splitted/*
 do 
@@ -74,18 +71,14 @@ echo "Imporing data from $entry"
           xsi:schemaLocation="http://www.localeze.com/Localeze http://www.localeze.com/LocalezePublish.xsd">
     <Business>' | cat - $entry > temp && mv temp $entry
     			echo '</Business></Delivery>' >>$entry
-
-
 	fi
-
 				((count++))
 
-#echo 
- php import.php $entry >./logs/log$count.txt &
 
-		
+ php import.php $entry >./logs/log$count.txt &		
 done
 
 wait
 
-echo "Imported Records"
+echo "Imported Records on `date`"
+echo "Created by Sanjeev Shrestha on 22 Jul 2014"
