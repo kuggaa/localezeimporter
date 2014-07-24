@@ -34,8 +34,12 @@ num_files=26
 
 # Work out lines per file.
 
+echo "Counting lines in the inflated file..."
 total_lines=$(cat ${fspec} | wc -l)
 ((lines_per_file = (total_lines + num_files - 1) / num_files))
+
+echo "Total lines     = ${total_lines}"
+echo "Lines  per file = ${lines_per_file}" 
 
 echo "Removing Old Splitted files..."
 rm -rf splitted/*
