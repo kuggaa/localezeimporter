@@ -11,7 +11,7 @@ red='\033[0;31m'
 NC='\033[0m' # No Color
 blue='\033[1;34m'
 ####################
-echo -e "${red}LOCALEZE DATA IMPORTER"
+echo -e "\n${red}LOCALEZE DATA IMPORTER"
 echo -e "================================================================================${NC}"
 echo    "Importer Started on `date`"
 echo -e "Downloading Zip file from FTP"
@@ -21,13 +21,17 @@ curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
 echo -e "--------------------------------------------------------------------------------"
 
 
+echo "Downloaded to $ftp_extractdir"
 if [[ $? -eq 0 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
 		extractedfile=`zipinfo -1 $ftp_outputfile`
 
 fi
+
 fspec="$ftp_extractdir/$extractedfile"
+echo "Extracted to file $fspec"
+
 
 num_lines=200000
 num_files=26
@@ -50,8 +54,6 @@ rm -rf splitted/*
 echo -e "Splitting Files..."
 split -l ${lines_per_file} ${fspec} splitted/xedb_split.
 
-echo "Total lines     = ${total_lines}"
-echo "Lines  per file = ${lines_per_file}" 
 
 #wc -l splitted/xedb_split.*
 
