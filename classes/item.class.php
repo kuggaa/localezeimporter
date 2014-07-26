@@ -23,6 +23,7 @@ class Item
 		}
 
 		$rev=$this->node['rev'];
+		$date=gmdate("Y-m-d g:i:s");
 		$pid =(int)$this->node->PID;
 
 		if($this->needsUpdate($pid,$rev))
@@ -155,22 +156,23 @@ class Item
 			if($this->exists){
 				$statement=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
 					pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
-					statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?
+					statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
 					where pid=?');
-				$statement->bind_param('sisssssssssssii',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+				$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 					$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
-					$data['stdhours'],$data['tagline'],$data['chainid'],$pid);
+					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
 				if($statement->execute())
 				{
-					echo 'Updated Data PID      : '.$pid;
-					echo "\t".date('Ymdgis');
-					echo "\t".mb_strlen(serialize($data), '8bit');
+					echo 'U'.$pid;
+					echo "\t";
+					//echo "\t".date('Ymdgis');
+					//echo "\t".mb_strlen(serialize($data), '8bit');
 
-					echo PHP_EOL;
+					//echo PHP_EOL;
 				}
 				else
 				{
-					echo "Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+					echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
 				}
 
 				
@@ -179,28 +181,33 @@ class Item
 			{
 				$statement=$connection->prepare('INSERT into n7k9w_localeze_businesslist 
 					(pid,pubdate,catid,title,introtext,description,address,city,
-						statecode,zip,phone,latitude, stdhours,tagline,chainid)
-				values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+						statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
+				values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 
-				$statement->bind_param('isisssssssssssi',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+				$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 					$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
-					$data['stdhours'],$data['tagline'],$data['chainid']);
+					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
 
 				if($statement->execute())
 				{
-					echo 'Inserted Data PID     : '.$pid;
-					echo "\t".date("Ymdgis");
-					echo "\t".mb_strlen(serialize($data), '8bit');
-					echo PHP_EOL;
+					echo 'I'.$pid;
+					//echo "\t".date("Ymdgis");
+					//echo "\t".mb_strlen(serialize($data), '8bit');
+					//echo PHP_EOL;
+					echo "\t";
 				}
 				else
 				{
-					echo "Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+					echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
 				}
 
 
 				
 			}
+		}
+		else
+		{
+			echo "NUN\t";
 		}
 	}
 

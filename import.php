@@ -45,6 +45,8 @@ $datastore->close();
 $endtime=time();
 $endmemory=memory_get_peak_usage();
 
+echo PHP_EOL.'---------------------------------------------'.PHP_EOL;
+
 echo 'Data File        : '.$datafile;
 echo PHP_EOL;
 echo 'Data Imported    : '.$count;

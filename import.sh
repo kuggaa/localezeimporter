@@ -17,7 +17,9 @@ echo    "Importer Started on `date`"
 echo -e "Downloading Zip file from FTP"
 echo -e "--------------------------------------------------------------------------------"
 source config.cfg
-curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
+
+wget -N  --user=$ftp_username --password=$ftp_password $ftp_path -P $ftp_outputdir
+# curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
 echo -e "--------------------------------------------------------------------------------"
 
 
@@ -31,6 +33,13 @@ fi
 
 fspec="$ftp_extractdir/$extractedfile"
 echo "Extracted to file $fspec"
+
+if [ ! -f $fspec ]
+then
+echo "ERROR Couldnt locate file to import : $fspec"
+exit 1
+fi
+
 
 
 num_lines=200000
