@@ -11,12 +11,13 @@ red='\033[0;31m'
 NC='\033[0m' # No Color
 blue='\033[1;34m'
 ####################
-echo -e "\n${red}LOCALEZE DATA IMPORTER"
+echo -e "\n${red}BEWISE LOCALEZE DATA IMPORTER"
 echo -e "================================================================================${NC}"
 echo    "Importer Started on `date`"
 echo -e "Downloading Zip file from FTP"
 echo -e "--------------------------------------------------------------------------------"
 source config.cfg
+source checkos.function
 
 wget -N  --user=$ftp_username --password=$ftp_password $ftp_path -P $ftp_outputdir
 # curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
@@ -24,6 +25,35 @@ echo -e "-----------------------------------------------------------------------
 
 
 echo "Downloaded to $ftp_extractdir"
+
+
+
+echo 'Checking Downloaded file if it is already imported or not'
+
+
+md5hash=''
+
+if [[ $platform==MAC ]];
+	then
+	md5hash=`md5 $ftp_outputfile | cut -d '='  -f2 | tr -d ' '`
+elif [[ $platform==LINUX ]]; then
+	md5hash=`md5sum $ftp_outputfile | cut -d " " -f1`
+fi
+	
+
+if [[ -f $datastore_checksums ]]; then
+	oldprint=`cat $datastore_checksums`
+
+	if [[ $oldprint == $md5hash ]]; then
+		echo "Data file already imported. exiting importer..."
+		exit 0
+	fi
+fi
+
+echo 'Saving checksum for future checks...'
+echo $md5hash > $datastore_checksums 
+
+
 if [[ $? -eq 0 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
@@ -34,11 +64,13 @@ fi
 fspec="$ftp_extractdir/$extractedfile"
 echo "Extracted to file $fspec"
 
+
 if [ ! -f $fspec ]
 then
 echo "ERROR Couldnt locate file to import : $fspec"
 exit 1
 fi
+
 
 
 
