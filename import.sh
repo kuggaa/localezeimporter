@@ -22,14 +22,8 @@ source checkos.function
 wget -N  --user=$ftp_username --password=$ftp_password $ftp_path -P $ftp_outputdir
 # curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
 echo -e "--------------------------------------------------------------------------------"
-
-
 echo "Downloaded to $ftp_extractdir"
-
-
-
 echo 'Checking Downloaded file if it is already imported or not'
-
 
 md5hash=''
 
@@ -53,7 +47,6 @@ fi
 echo 'Saving checksum for future checks...'
 echo $md5hash > $datastore_checksums 
 
-
 if [[ $? -eq 0 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
@@ -70,9 +63,6 @@ then
 echo "ERROR Couldnt locate file to import : $fspec"
 exit 1
 fi
-
-
-
 
 num_lines=200000
 num_files=26
