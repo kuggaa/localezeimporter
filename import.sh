@@ -24,6 +24,8 @@ platform="UNKNOWN"
 
 if [[ $OSTYPE == linux-gnu ]]; then
         platform='LINUX'
+elif [[ $OSTYPE == LINUX ]]; then
+        platform='LINUX'
 elif [[ $OSTYPE == darwin* ]]; then
         platform="MAC"
 elif [[ $OSTYPE == cygwin ]]; then
@@ -47,6 +49,7 @@ echo 'Checking Downloaded file if it is already imported or not'
 downloaded=$?
 md5hash=''
 
+echo $platform
 
 if [[ $platform==MAC ]];
 	then

@@ -2,6 +2,8 @@ platform="UNKNOWN"
 
 if [[ $OSTYPE == linux-gnu ]]; then
         platform='LINUX'
+elif [[ $OSTYPE == LINUX ]]; then
+        platform='LINUX'
 elif [[ $OSTYPE == darwin* ]]; then
         platform="MAC"
 elif [[ $OSTYPE == cygwin ]]; then
