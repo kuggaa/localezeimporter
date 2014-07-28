@@ -17,15 +17,36 @@ echo    "Importer Started on `date`"
 echo -e "Downloading Zip file from FTP"
 echo -e "--------------------------------------------------------------------------------"
 source config.cfg
-source checkos.function
 
+#Check OS TYPE Start
+
+platform="UNKNOWN"
+
+if [[ $OSTYPE == linux-gnu ]]; then
+        platform='LINUX'
+elif [[ $OSTYPE == darwin* ]]; then
+        platform="MAC"
+elif [[ $OSTYPE == cygwin ]]; then
+		platform='CYG'
+        
+elif [[ $OSTYPE == win32 ]]; then
+        platform='WINDOWS'
+
+elif [[ $OSTYPE == freebsd* ]]; then
+        platform='FREEBSD'
+
+fi
+
+#Check OS TYPE END
 wget -N  --user=$ftp_username --password=$ftp_password $ftp_path -P $ftp_outputdir
 # curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
 echo -e "--------------------------------------------------------------------------------"
 echo "Downloaded to $ftp_extractdir"
 echo 'Checking Downloaded file if it is already imported or not'
 
+downloaded=$?
 md5hash=''
+
 
 if [[ $platform==MAC ]];
 	then
@@ -46,8 +67,7 @@ fi
 
 echo 'Saving checksum for future checks...'
 echo $md5hash > $datastore_checksums 
-
-if [[ $? -eq 0 ]];
+if [[ $downloaded -eq 0 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
 		extractedfile=`zipinfo -1 $ftp_outputfile`

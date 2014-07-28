@@ -1,0 +1,16 @@
+platform="UNKNOWN"
+
+if [[ $OSTYPE == linux-gnu ]]; then
+        platform='LINUX'
+elif [[ $OSTYPE == darwin* ]]; then
+        platform="MAC"
+elif [[ $OSTYPE == cygwin ]]; then
+		platform='CYG'
+        
+elif [[ $OSTYPE == win32 ]]; then
+        platform='WINDOWS'
+
+elif [[ $OSTYPE == freebsd* ]]; then
+        platform='FREEBSD'
+
+fi
