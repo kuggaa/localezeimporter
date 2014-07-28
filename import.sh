@@ -24,8 +24,6 @@ platform="UNKNOWN"
 
 if [[ $OSTYPE == linux-gnu ]]; then
         platform='LINUX'
-elif [[ $OSTYPE == LINUX ]]; then
-        platform='LINUX'
 elif [[ $OSTYPE == darwin* ]]; then
         platform="MAC"
 elif [[ $OSTYPE == cygwin ]]; then
@@ -49,12 +47,10 @@ echo 'Checking Downloaded file if it is already imported or not'
 downloaded=$?
 md5hash=''
 
-echo $platform
-
-if [[ $platform==MAC ]];
+if [[ $platform == MAC ]];
 	then
 	md5hash=`md5 $ftp_outputfile | cut -d '='  -f2 | tr -d ' '`
-elif [[ $platform==LINUX ]]; then
+elif [[ $platform == LINUX ]]; then
 	md5hash=`md5sum $ftp_outputfile | cut -d " " -f1`
 fi
 	
@@ -65,7 +61,11 @@ if [[ -f $datastore_checksums ]]; then
 	if [[ $oldprint == $md5hash ]]; then
 		echo "Data file already imported. exiting importer..."
 		exit 0
+	else
+		echo 'Data not imported. Starting importer...'
 	fi
+else
+	echo 'No Checksums available. Initial Import. Starting importer...'
 fi
 
 echo 'Saving checksum for future checks...'
