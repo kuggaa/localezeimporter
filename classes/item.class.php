@@ -8,6 +8,8 @@ class Item
 
 	private $exists=null;
 
+	private $localupdated=null;
+
 
 	public function __construct($node,$conn=null)
 	{
@@ -154,25 +156,62 @@ class Item
 
 
 			if($this->exists){
-				$statement=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
-					pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
-					statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
-					where pid=?');
-				$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+
+				//Check Dirty flag for the item
+
+				if(!$this->localupdate)
+				{
+						$statement=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
+							pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
+							statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
+							where pid=?');
+						$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+							$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
+							$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
+						if($statement->execute())
+						{
+							echo 'U'.$pid;
+							echo "\t";
+							//echo "\t".date('Ymdgis');
+							//echo "\t".mb_strlen(serialize($data), '8bit');
+
+							//echo PHP_EOL;
+						}
+						else
+						{
+							echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+						}
+				}
+				else
+				{
+					$statement=$connection->prepare('INSERT into n7k9w_localeze_businesslist_versions 
+					(pid,pubdate,catid,title,introtext,description,address,city,
+						statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
+				values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+
+				$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 					$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
-					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
+					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
+
 				if($statement->execute())
 				{
-					echo 'U'.$pid;
-					echo "\t";
-					//echo "\t".date('Ymdgis');
+					echo 'R'.$pid;
+					//echo "\t".date("Ymdgis");
 					//echo "\t".mb_strlen(serialize($data), '8bit');
-
 					//echo PHP_EOL;
+					echo "\t";
+
+					$statement2=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
+							revision=?,lastupdated=?
+							where pid=?');
+						$statement2->bind_param('isi',$rev,$date,$pid);
+
+						$statement2->execute();
 				}
 				else
 				{
 					echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+				}
 				}
 
 				
@@ -213,7 +252,7 @@ class Item
 
 	private function needsUpdate($pid,$rev)
 	{
-		$query='SELECT pid,revision,lastupdated from n7k9w_localeze_businesslist where pid='.$pid;
+		$query='SELECT pid,revision,lastupdated,localupdate from n7k9w_localeze_businesslist where pid='.$pid;
 
 		$result=$this->conn->execute($query);
 
@@ -221,6 +260,8 @@ class Item
 		{
 			$this->exists=true;
 			$row=$result->fetch_assoc();
+			$this->localupdate=$row['localupdate']?true:false;
+
 			if($row['revision']<$rev)
 			{
 				return true;
@@ -232,6 +273,7 @@ class Item
 		}
 		else
 		{
+			$this->localupdate=false;
 			$this->exists=false;
 			return true;
 		}
