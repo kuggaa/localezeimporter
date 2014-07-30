@@ -161,57 +161,58 @@ class Item
 
 				if(!$this->localupdate)
 				{
-						$statement=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
-							pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
-							statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
-							where pid=?');
-						$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
-							$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
-							$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
-						if($statement->execute())
-						{
-							echo 'U'.$pid;
-							echo "\t";
+					$statement=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
+						pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
+						statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
+						where pid=?');
+					$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+						$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
+						$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
+					if($statement->execute())
+					{
+						echo 'U'.$pid;
+						echo "\t";
 							//echo "\t".date('Ymdgis');
 							//echo "\t".mb_strlen(serialize($data), '8bit');
 
 							//echo PHP_EOL;
-						}
-						else
-						{
-							echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
-						}
+					}
+					else
+					{
+						echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+					}
+
 				}
 				else
 				{
 					$statement=$connection->prepare('INSERT into n7k9w_localeze_businesslist_versions 
-					(pid,pubdate,catid,title,introtext,description,address,city,
-						statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
-				values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+						(pid,pubdate,catid,title,introtext,description,address,city,
+							statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
+					values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 
-				$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
-					$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
-					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
+					$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+						$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
+						$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
 
-				if($statement->execute())
-				{
-					echo 'R'.$pid;
+					if($statement->execute())
+					{
+						echo 'R'.$pid;
 					//echo "\t".date("Ymdgis");
 					//echo "\t".mb_strlen(serialize($data), '8bit');
 					//echo PHP_EOL;
-					echo "\t";
+						echo "\t";
 
-					$statement2=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
+						$statement2=$connection->prepare('UPDATE n7k9w_localeze_businesslist set
 							revision=?,lastupdated=?
 							where pid=?');
 						$statement2->bind_param('isi',$rev,$date,$pid);
 
 						$statement2->execute();
-				}
-				else
-				{
-					echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
-				}
+					}
+					else
+					{
+						echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
+					}
 				}
 
 				
@@ -239,10 +240,31 @@ class Item
 				{
 					echo PHP_EOL."Error                 : ".$pid."\t".$statement->error.PHP_EOL;
 				}
-
-
-				
 			}
+
+
+
+				if(count($data['phones']))
+				{
+					foreach($data['phones'] as $phone)
+					{
+						$phone->pid=$pid;
+						$phoneObj=new Phone($this->conn,$phone);
+						$phoneObj->insert();
+					}
+				}
+
+			if(count($data['paymenttypes']))
+				{
+					foreach($data['paymenttypes'] as $payment)
+					{
+						$payobject=new stdClass();
+						$payobject->pid=$pid;
+						$payobject->paymenttype=$payment;
+						$paymentobj=new Payment($this->conn,$payobject);
+						$paymentobj->insert();
+					}
+				}
 		}
 		else
 		{
