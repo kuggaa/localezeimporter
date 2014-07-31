@@ -44,6 +44,9 @@ echo -e "-----------------------------------------------------------------------
 echo "Downloaded to $ftp_extractdir"
 echo 'Checking Downloaded file if it is already imported or not'
 
+
+#Check if the permission is right
+
 downloaded=$?
 md5hash=''
 
