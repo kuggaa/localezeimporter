@@ -141,6 +141,7 @@ echo "Imporing data from $entry"
  php import.php $entry >./logs/log$count.txt &		
 done
 
+echo "Waiting for importer to complete..."
 wait
 
 echo "Imported Records on `date`"

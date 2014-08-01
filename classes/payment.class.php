@@ -29,7 +29,7 @@ class Payment
 		if(!$this->item)
 			return false;
 
-		echo $paymentid=self::$paymenttypearrays[$this->item->paymenttype];
+		$paymentid=self::$paymenttypearrays[$this->item->paymenttype];
 		if(!$this->exists($this->item->pid,$paymentid))
 		{
 			$connection=$this->conn->getConnection();
