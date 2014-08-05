@@ -74,14 +74,25 @@ else
 	echo 'No Checksums available. Initial Import. Starting importer...'
 fi
 
-echo $downloaded
-if [[ $downloaded -eq 1 ]];
+if [[ $downloaded -eq 0 ]];
 	then
-		unzip -o $ftp_outputfile -d $ftp_extractdir
+		already_extracted=0
+		if [[ -f $extracted_checksums ]]; then
+			oldextracted_checksum=`cat $extracted_checksums`
+				if [[ $oldextracted_checksum == $md5hash ]]; then
+					echo 'File already extracted...'
+					already_extracted=1
+				fi
+		fi
+
+		if [[ $already_extracted -eq 0 ]]; then
+			echo 'Extracting Downloaded file...'
+			unzip -o $ftp_outputfile -d $ftp_extractdir
+		fi
+
 		extractedfile=`zipinfo -1 $ftp_outputfile`
 
 fi
-exit 1
 
 fspec="$ftp_extractdir/$extractedfile"
 echo "Extracted to file $fspec"
@@ -141,13 +152,15 @@ echo "Imporing data from $entry"
 				((count++))
 
 
- php import.php $entry >./logs/log$count.txt &		
+# php import.php $entry >./logs/log$count.txt &		
 done
 
 echo "Waiting for importer to complete..."
 wait
 
-echo 'Saving checksum for future checks...'
+echo 'Saving checksums for future checks...'
 echo $md5hash > $datastore_checksums 
+echo $md5hash > $extracted_checksums 
+
 echo "Imported Records on `date`"
 echo "Created by Sanjeev Shrestha on 22 Jul 2014"
