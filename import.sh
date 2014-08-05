@@ -76,12 +76,15 @@ fi
 
 echo 'Saving checksum for future checks...'
 echo $md5hash > $datastore_checksums 
+
+echo $downloaded
 if [[ $downloaded -eq 0 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
 		extractedfile=`zipinfo -1 $ftp_outputfile`
 
 fi
+exit 1
 
 fspec="$ftp_extractdir/$extractedfile"
 echo "Extracted to file $fspec"
