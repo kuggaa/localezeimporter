@@ -42,7 +42,7 @@ wget -N  --user=$ftp_username --password=$ftp_password $ftp_path -P $ftp_outputd
 # curl -u $ftp_username:$ftp_password $ftp_path -o $ftp_outputfile
 echo -e "--------------------------------------------------------------------------------"
 echo "Downloaded to $ftp_extractdir"
-echo 'Checking Downloaded file if it is already imported or not'
+echo 'Checking Downloaded file if it is already downloaded or not'
 
 
 #Check if the permission is right
