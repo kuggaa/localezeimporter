@@ -74,9 +74,6 @@ else
 	echo 'No Checksums available. Initial Import. Starting importer...'
 fi
 
-echo 'Saving checksum for future checks...'
-echo $md5hash > $datastore_checksums 
-
 echo $downloaded
 if [[ $downloaded -eq 0 ]];
 	then
@@ -150,5 +147,7 @@ done
 echo "Waiting for importer to complete..."
 wait
 
+echo 'Saving checksum for future checks...'
+echo $md5hash > $datastore_checksums 
 echo "Imported Records on `date`"
 echo "Created by Sanjeev Shrestha on 22 Jul 2014"
