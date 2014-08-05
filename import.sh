@@ -75,7 +75,7 @@ else
 fi
 
 echo $downloaded
-if [[ $downloaded -eq 0 ]];
+if [[ $downloaded -eq 1 ]];
 	then
 		unzip -o $ftp_outputfile -d $ftp_extractdir
 		extractedfile=`zipinfo -1 $ftp_outputfile`
