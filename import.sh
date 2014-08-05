@@ -152,7 +152,7 @@ echo "Imporing data from $entry"
 				((count++))
 
 
-# php import.php $entry >./logs/log$count.txt &		
+	php import.php $entry >./logs/log$count.txt &		
 done
 
 echo "Waiting for importer to complete..."
