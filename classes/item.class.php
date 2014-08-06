@@ -243,7 +243,7 @@ class Item
 			}
 
 
-
+/*
 				if(count($data['phones']))
 				{
 					foreach($data['phones'] as $phone)
@@ -252,8 +252,8 @@ class Item
 						$phoneObj=new Phone($this->conn,$phone);
 						$phoneObj->insert();
 					}
-				}
-
+				}*/
+/*
 			if(count($data['paymenttypes']))
 				{
 					foreach($data['paymenttypes'] as $payment)
@@ -264,7 +264,7 @@ class Item
 						$paymentobj=new Payment($this->conn,$payobject);
 						$paymentobj->insert();
 					}
-				}
+				}*/
 		}
 		else
 		{
