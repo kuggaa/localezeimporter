@@ -105,8 +105,8 @@ class Item
 					foreach($headings->Heading as $heading)
 					{
 						$cat=new stdClass();
-						$cat->id=(int)$heading->NormalizedID;
-						$cat->name=(string)$heading->NormalizedHeading;
+						$cat->id=(int)$heading->CategoryID;
+						$cat->name=(string)$heading->CategoryName;
 						$categories[$count]=$cat;
 
 						if($count==0)
