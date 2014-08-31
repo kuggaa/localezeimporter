@@ -28,7 +28,10 @@ class Item
 		$date=gmdate("Y-m-d g:i:s");
 		$pid =(int)$this->node->PID;
 
-		if($this->needsUpdate($pid,$rev))
+		//$needsupdate=$this->needsUpdate($pid,$rev);
+$needsupdate=true;
+$this->exists=false;
+		if($needsupdate)
 		{
 			$connection=$this->conn->getConnection();
 			$data=array();
