@@ -168,7 +168,7 @@ $this->exists=false;
 						pubdate=?,catid=?,title=?,introtext=?,description=?,address=?,city=?,
 						statecode=?,zip=?,phone=?,latitude=?, stdhours=?,tagline=?,chainid=?,revision=?,lastupdated=?
 						where pid=?');
-					$statement->bind_param('sisssssssssssissi',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+					$statement->bind_param('sisssssssssssisss',$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 						$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
 						$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date,$pid);
 					if($statement->execute())
@@ -193,7 +193,7 @@ $this->exists=false;
 							statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
 					values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 
-					$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+					$statement->bind_param('ssisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 						$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
 						$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
 
@@ -227,7 +227,7 @@ $this->exists=false;
 						statecode,zip,phone,latitude, stdhours,tagline,chainid,revision,lastupdated)
 				values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 
-				$statement->bind_param('isisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
+				$statement->bind_param('ssisssssssssssiss',$pid,$data['pubdate'],$data['catid'],$data['title'],$data['introtext'],
 					$data['description'],$data['address'],$data['city'],$data['statecode'],$data['zip'],$data['phone'],$data['latlng'],
 					$data['stdhours'],$data['tagline'],$data['chainid'],$rev,$date);
 
@@ -277,7 +277,7 @@ $this->exists=false;
 
 	private function needsUpdate($pid,$rev)
 	{
-		$query='SELECT pid,revision,lastupdated,localupdate from n7k9w_localeze_businesslist where pid='.$pid;
+		$query='SELECT pid,revision,lastupdated,localupdate from n7k9w_localeze_businesslist where pid="'.$pid.'"';
 
 		$result=$this->conn->execute($query);
 
